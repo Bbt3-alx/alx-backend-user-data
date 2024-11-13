@@ -8,9 +8,15 @@ from typing import List, TypeVar
 
 class Auth:
     """Class authentication"""
-    def require_auth(self, path: str, exclude_paths: List[str]) -> bool:
+    def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """The require path"""
-        return False
+        if path is None:
+            return True
+        elif excluded_paths is None or len(excluded_paths) == 0:
+            return True
+        elif path in excluded_paths or path + '/' in excluded_paths:
+            return False
+
 
     def authorization_header(self, request=None) -> str:
         """The authorization header"""
