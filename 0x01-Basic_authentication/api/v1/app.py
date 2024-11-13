@@ -15,6 +15,7 @@ CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
 
 auth = None
+
 AUTH_TYPE = getenv('AUTH_TYPE')
 if AUTH_TYPE == 'auth':
     from api.v1.auth.auth import Auth
@@ -41,22 +42,28 @@ def forbidden(error) -> str:
 
 
 @app.before_request
-def before_request():
+def filter_request():
     """Check if the request has a specific path"""
     if auth is None:
         return
 
-    if not auth.require_auth(request.path, [
+    excluded_path = [
             '/api/v1/status/',
             '/api/v1/unauthorized/',
             '/api/v1/forbidden/'
-            ]):
+            ]
+    # Check if the path requires authentication
+    if not auth.require_auth(request.path, excluded_path):
         return
 
-    if not auth.authorization_header(request):
-        abort(401)
-    if not auth.current_user(request):
-        abort(403)
+    # Check for Authorization header
+    if auth.authorization_header(request) is None:
+        abort(401)  # Unauthorized if no auth header
+
+    # Check if there is a current user
+    if auth.current_user(request) is None:
+        abort(403)  # Forbidden if current user is not valid
+
 
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
