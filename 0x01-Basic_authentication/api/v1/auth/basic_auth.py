@@ -42,5 +42,4 @@ class BasicAuth(Auth):
             d = base64.b64decode(base64_authorization_header).decode('utf-8')
             return d
         except Exception:
-            print("Exception raised")
             return None
