@@ -13,16 +13,13 @@ class Auth:
         """The require path"""
         if path is None:
             return True
+
         if excluded_paths is None or len(excluded_paths) == 0:
             return True
-        #path = path.rstrip('/')
-        #excluded_paths = [p.rstrip('/') for p in excluded_paths]
+
         if not path.endswith('/'):
             path += '/'
 
-        #if path in excluded_paths:
-            #return False
-        
         for pattern in excluded_paths:
             # Normalize the pattern to ensure it ends with slash
             if not pattern.endswith('/'):
