@@ -54,9 +54,11 @@ class BasicAuth(Auth):
         """Basic - User credentials"""
         d_b64_auth_h = decoded_base64_authorization_header
         if d_b64_auth_h:
-            if isinstance(d_b64_auth_h, str) and d_b64_auth_h.count(':') == 1:
-                credentials = d_b64_auth_h.split(':')
-                return (credentials[0], credentials[1])
+            if isinstance(d_b64_auth_h, str) and ':' in d_b64_auth_h:
+                auth_separator = d_b64_auth_h.find(':')
+                email = d_b64_auth_h[:auth_separator]
+                pwd = d_b64_auth_h[auth_separator + 1:]
+                return (email, pwd)
             return (None, None)
         return (None, None)
 
