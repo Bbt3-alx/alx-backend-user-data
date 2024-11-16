@@ -19,8 +19,17 @@ class Auth:
 
         if path in excluded_paths:
             return False
-        else:
-            return True
+        
+        for pattern in excluded_paths:
+            # Normalize the pattern to ensure it ends with slash
+            if not pattern.endswith('/'):
+                pattern += '/'
+
+            # Use fnmatch to check if the path matches the pattern
+            if fnmatch.fnmatch(path, pattern):
+                return False
+
+        return True
 
     def authorization_header(self, request=None) -> str:
         """The authorization header"""
