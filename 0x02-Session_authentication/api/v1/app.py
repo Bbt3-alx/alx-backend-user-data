@@ -64,7 +64,8 @@ def filter_request():
         return
 
     # Check for Authorization header
-    if auth.authorization_header(request) and auth.session_cookie(request):
+    if not auth.authorization_header(request) and not \
+            auth.session_cookie(request):
         abort(401)  # Unauthorized if no auth header
 
     # Check if there is a current user
