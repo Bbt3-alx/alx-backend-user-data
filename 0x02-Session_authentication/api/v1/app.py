@@ -56,7 +56,8 @@ def filter_request():
     excluded_path = [
             '/api/v1/status/',
             '/api/v1/unauthorized/',
-            '/api/v1/forbidden/'
+            '/api/v1/forbidden/',
+            '/api/v1/auth_session/login/'
             ]
     # Check if the path requires authentication
     if not auth.require_auth(request.path, excluded_path):
@@ -70,6 +71,9 @@ def filter_request():
     request.current_user = auth.current_user(request)
     if request.current_user is None:
         abort(403)  # Forbidden if current user is not valid
+
+    if auth.authorization_header(request) and auth.session_cookie(request):
+        abort(401)
 
 
 if __name__ == "__main__":
