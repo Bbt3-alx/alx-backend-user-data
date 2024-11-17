@@ -64,16 +64,13 @@ def filter_request():
         return
 
     # Check for Authorization header
-    if auth.authorization_header(request) is None:
+    if auth.authorization_header(request) and auth.session_cookie(request):
         abort(401)  # Unauthorized if no auth header
 
     # Check if there is a current user
     request.current_user = auth.current_user(request)
     if request.current_user is None:
         abort(403)  # Forbidden if current user is not valid
-
-    if auth.authorization_header(request) and auth.session_cookie(request):
-        abort(401)
 
 
 if __name__ == "__main__":
