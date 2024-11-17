@@ -2,7 +2,6 @@
 """Empty Session"""
 
 
-from flask import session
 from api.v1.auth.auth import Auth
 import uuid
 
