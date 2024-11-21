@@ -6,7 +6,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.exc import InvalidRequestError, NoResultFound
-
 # from sqlalchemy.orm.exc import NoResultFound
 from typing import Optional
 
@@ -14,10 +13,12 @@ from user import Base, User
 
 
 class DB:
-    """DB class"""
+    """DB class
+    """
 
     def __init__(self) -> None:
-        """Initialize a new DB instance"""
+        """Initialize a new DB instance
+        """
         self._engine = create_engine("sqlite:///a.db", echo=False)
         Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
@@ -25,7 +26,8 @@ class DB:
 
     @property
     def _session(self) -> Session:
-        """Memoized session object"""
+        """Memoized session object
+        """
         if self.__session is None:
             DBSession = sessionmaker(bind=self._engine)
             self.__session = DBSession()
@@ -39,7 +41,7 @@ class DB:
 
         return new_user
 
-    def find_user_by(self, **kwargs) -> Optional[User]:
+    def find_user_by(self, **kwargs) -> User:
         """
         This method takes in arbitrary keyword arguments
         and returns the first row found in the users table
@@ -50,8 +52,8 @@ class DB:
             if user_found:
                 return user_found
 
-        except InvalidRequestError as e:
+        except InvalidRequestError:
             raise
 
-        except NoResultFound as e:
+        except NoResultFound:
             raise
