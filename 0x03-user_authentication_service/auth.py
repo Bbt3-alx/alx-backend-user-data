@@ -3,6 +3,7 @@
 
 
 import bcrypt
+from db import DB
 
 
 def _hash_password(password: str) -> bytes:
@@ -13,3 +14,19 @@ def _hash_password(password: str) -> bytes:
     hashed_pwd = bcrypt.hashpw(password, salt)
 
     return hashed_pwd
+
+
+class Auth:
+    """Auth class to interact with the authentication database."""
+
+    def __init__(self):
+        self._db = DB()
+
+    def register_user(email: str, password: str) -> User:
+        """Register a user and return a user object"""
+        if self._db.find_user_by(email=email):
+            raise ValueError(f"User {email} already exists")
+        else:
+            hashed_pwd = _hash_password(password)
+            new_user = self._db.add_user(email, hashed_pwd)
+            return new_user
