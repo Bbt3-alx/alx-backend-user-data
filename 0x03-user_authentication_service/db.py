@@ -47,12 +47,10 @@ class DB:
         and returns the first row found in the users table
         as filtered by the method’s input arguments.
         """
-        try:
-            user_found = self._session.query(User).filter_by(**kwargs).one()
-            if user_found:
-                return user_found
-            else:
-                raise NoResultFound
-
-        except InvalidRequestError:
-            raise
+        user_found = self._session.query(User).filter_by(**kwargs).one()
+        if user_found:
+            return user_found
+        elif InvalidRequestError:
+            raise InvalidRequestError
+        else:
+            raise NoResultFound
