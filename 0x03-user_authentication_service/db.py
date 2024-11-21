@@ -5,6 +5,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
+from sqlalchemy.exc import InvalidRequestError, NoResultFound
+# from sqlalchemy.orm.exc import NoResultFound
+from typing import Optional
 
 from user import Base, User
 
@@ -37,3 +40,20 @@ class DB:
         self._session.commit()
 
         return new_user
+
+    def find_user_by(self, **kwargs: any) -> Optional[User]:
+        """
+        This method takes in arbitrary keyword arguments
+        and returns the first row found in the users table
+        as filtered by the method’s input arguments.
+        """
+        try:
+            user_found = self._session.query(User).filter_by(**kwargs).one()
+            if user_found:
+                return user_found
+
+        except InvalidRequestError as e:
+            raise InvalidRequestError(f'Invalide query: {e}')
+
+        except NoResultFound as e:
+            raise NoResultFound(f'No user found with parameters: {kwargs}')
