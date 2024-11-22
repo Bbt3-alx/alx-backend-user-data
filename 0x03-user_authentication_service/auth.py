@@ -5,6 +5,7 @@
 import bcrypt
 from db import DB
 from user import User
+import base64
 
 
 def _hash_password(password: str) -> bytes:
@@ -12,9 +13,13 @@ def _hash_password(password: str) -> bytes:
     _has_passward method takes in a password string args
     and returns bytes
     """
-    hashed_pwd = bcrypt.hashpw(password, salt)
+    password = bytes(password, encoding='utf-8')
+    hashed_pwd = base64.b64encode(password)
 
-    return hashed_pwd
+    salt = bcrypt.gensalt()
+    crypted_pwd = bcrypt.hashpw(hashed_pwd, salt)
+
+    return crypted_pwd
 
 
 class Auth:
