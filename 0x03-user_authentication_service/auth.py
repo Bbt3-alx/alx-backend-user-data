@@ -13,13 +13,12 @@ def _hash_password(password: str) -> bytes:
     _has_passward method takes in a password string args
     and returns bytes
     """
-    password = bytes(password, encoding='utf-8')
-    hashed_pwd = base64.b64encode(password)
+    password = bytes(password, encoding="utf-8")
 
     salt = bcrypt.gensalt()
-    crypted_pwd = bcrypt.hashpw(hashed_pwd, salt)
+    hashed_pwd = bcrypt.hashpw(password, salt)
 
-    return crypted_pwd
+    return hashed_pwd
 
 
 class Auth:
