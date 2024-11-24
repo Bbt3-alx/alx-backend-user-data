@@ -19,14 +19,14 @@ def home():
 
 
 @app.route("/users", methods=["GET", "POST"])
-def register_user():
+def users():
     """Register a user"""
     if request.method == "POST":
-        email = request.form.get("emil")
+        email = request.form.get("email")
         password = request.form.get("password")
         try:
             new_user = AUTH.register_user(email, password)
-            return new_user
+            return jsonify({"email": new_user.email, "message": "user created"})
         except ValueError:
             return jsonify({"message": "email already registered"}), 400
 
