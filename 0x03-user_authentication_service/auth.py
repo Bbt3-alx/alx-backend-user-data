@@ -8,6 +8,12 @@ from user import User
 import base64
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
+import uuid
+
+
+def _generate_uuid():
+    """Generate UUIDs"""
+    return str(uuid.uuid4())
 
 
 def _hash_password(password: str) -> bytes:
