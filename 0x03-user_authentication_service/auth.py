@@ -11,7 +11,7 @@ from sqlalchemy.orm.exc import NoResultFound
 import uuid
 
 
-def _generate_uuid():
+def _generate_uuid() -> str:
     """Generate UUIDs"""
     return str(uuid.uuid4())
 
