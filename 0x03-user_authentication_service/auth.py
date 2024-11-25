@@ -15,10 +15,8 @@ def _hash_password(password: str) -> bytes:
     _has_passward method takes in a password string args
     and returns bytes
     """
-    password = bytes(password, encoding="utf-8")
-
     salt = bcrypt.gensalt()
-    hashed_pwd = bcrypt.hashpw(password, salt)
+    hashed_pwd = bcrypt.hashpw(password.encode("utf-8"), salt)
 
     return hashed_pwd
 
@@ -43,3 +41,15 @@ class Auth:
 
         except InvalidRequestError:
             raise ValueError(f"User {email} already exists")
+
+    def valid_login(self, email: str, password: str) -> bool:
+        """Credential validation method"""
+        try:
+            user = self._db.find_user_by(email=email)
+            if bcrypt.checkpw(password.encode("utf-8"), user.hashed_password):
+                return True
+            else:
+                return False
+
+        except (InvalidRequestError, NoResultFound):
+            return False
